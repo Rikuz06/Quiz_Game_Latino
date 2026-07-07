@@ -2,7 +2,7 @@
 node_modules/
 .agents/
 tests/
-#js/
+
 
 # File di configurazione e log
 jest.config.js
