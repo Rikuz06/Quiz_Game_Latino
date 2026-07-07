@@ -207,6 +207,17 @@ function updateFavorUI() {
       btnGladius.setAttribute('aria-disabled', 'true');
     }
   }
+
+  const btnMedicina = document.getElementById('btn-ability-medicina');
+  if (btnMedicina) {
+    if (favor >= 50) {
+      btnMedicina.classList.remove('locked');
+      btnMedicina.setAttribute('aria-disabled', 'false');
+    } else {
+      btnMedicina.classList.add('locked');
+      btnMedicina.setAttribute('aria-disabled', 'true');
+    }
+  }
 }
 
 /**
@@ -379,17 +390,17 @@ let currentEnemyType = ENEMY_TYPES[0];
  */
 function renderEnemy(enemyType) {
   currentEnemyType = enemyType;
-  
+
   const enemyNameEl = document.getElementById('enemy-name');
   if (enemyNameEl) {
     enemyNameEl.textContent = enemyType.name;
   }
-  
+
   const enemyTitleEl = document.getElementById('enemy-title');
   if (enemyTitleEl) {
     enemyTitleEl.textContent = enemyType.title;
   }
-  
+
   const portraitEl = document.getElementById('enemy-portrait');
   if (portraitEl) {
     portraitEl.src = enemyType.portrait;
@@ -401,7 +412,7 @@ function renderEnemy(enemyType) {
     // Update avatar container border color to match enemy
     avatarContainer.style.borderColor = enemyType.accent;
     avatarContainer.style.boxShadow = `0 0 20px ${enemyType.color}44, inset 0 0 15px ${enemyType.color}22, 0 4px 12px rgba(0,0,0,0.3)`;
-    
+
     // Add entrance animation
     avatarContainer.classList.add('enemy-entrance');
     setTimeout(() => {
@@ -687,10 +698,47 @@ function useGladius() {
     }
   }
 
-  showFeedback("⚔️ Gladius! Colpo micidiale inflitto!");
+  // Set enemy HP to 0 and trigger defeat
+  enemyHP = 0;
+  updateEnemyHPUI();
+
+  RomanArenaAudio.playCheer();
+
+  // Trigger non-blocking victory banner
+  showVictoryBanner(currentEnemyType.name);
+
+  // Track defeated emperor
+  if (!defeatedEmperors.includes(currentEnemyType.name)) {
+    defeatedEmperors.push(currentEnemyType.name);
+    updateTrophyUI();
+  }
+
+  // Spawn a new random emperor
+  const newEnemy = getRandomEnemyType();
+  renderEnemy(newEnemy);
+
+  showFeedback("⚔️ Gladius! Cesare sconfitto istantaneamente!");
 
   // Progress Loop
   loadNextWord();
+}
+
+/**
+ * Ability: Activate Medicina (Heal 30 HP)
+ */
+function useMedicina() {
+  if (currentState !== States.BATTLE) return;
+  if (favor < 50) return;
+
+  favor -= 50;
+  playerHP = Math.min(100, playerHP + 30);
+
+  updateFavorUI();
+  updatePlayerHPUI();
+
+  RomanArenaAudio.playShield();
+
+  showFeedback("❤️ Medicina! Hai recuperato 30 HP!");
 }
 
 /**
@@ -906,6 +954,11 @@ document.addEventListener('DOMContentLoaded', () => {
     btnGladius.addEventListener('click', useGladius);
   }
 
+  const btnMedicina = document.getElementById('btn-ability-medicina');
+  if (btnMedicina) {
+    btnMedicina.addEventListener('click', useMedicina);
+  }
+
   const toggleAccessibilityBtn = document.getElementById('toggle-accessibility-motion');
   if (toggleAccessibilityBtn) {
     toggleAccessibilityBtn.addEventListener('click', () => {
@@ -931,6 +984,9 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (key === '3' || key === 'g') {
       e.preventDefault();
       useGladius();
+    } else if (key === '4' || key === 'm') {
+      e.preventDefault();
+      useMedicina();
     }
   });
 

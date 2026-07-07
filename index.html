@@ -49,15 +49,34 @@
 
           <!-- Game Mode Description -->
           <div class="rules-container gold-border">
-            <h3 class="section-title cinzel-subtitle">Come Funziona</h3>
-            <div class="game-mode-desc">
-              <p>📖 <strong>Tutte le parole</strong> vengono chieste in <strong>ordine casuale</strong> — nomi, verbi, aggettivi, declinazioni e coniugazioni mescolate insieme!</p>
-              <p>⚔️ Rispondi correttamente per <strong>colpire il nemico</strong>. Sbaglia e subirai danni!</p>
-              <p>🏆 Sconfiggi tutti i gladiatori e traduci quante più parole possibili!</p>
+            <h3 class="section-title cinzel-subtitle">Regolamento e Consigli</h3>
+            
+            <div class="game-mode-desc text-left">
+              <p>📖 <strong>Ordine Casuale:</strong> Nomi, verbi, aggettivi, declinazioni e coniugazioni sono mescolati insieme!</p>
+              <p>⚔️ <strong>Combattimento:</strong> Traduci bene per colpire il nemico, altrimenti subirai danni!</p>
+            </div>
+
+            <div class="answering-tips-container text-left">
+              <p>✍️ <strong>Raccomandazioni per le risposte:</strong></p>
+              <ul>
+                <li><strong>Non usare articoli:</strong> Scrivi direttamente la parola (es. "lupo", NON "il lupo").</li>
+                <li><strong>Coniugazioni/Verbi:</strong> Separa le parole con uno spazio (es. "io amo", "essi erano").</li>
+                <li><strong>Attributi/Nomi:</strong> Rispondi con la traduzione diretta e pulita.</li>
+              </ul>
+            </div>
+
+            <div class="powerups-guide text-left">
+              <p>⚡ <strong>Descrizione Abilità (Power-Up):</strong></p>
+              <ul>
+                <li>🛡️ <strong>SCVTVM (Costo: 40%):</strong> Assorbe ed evita il danno del prossimo errore.</li>
+                <li>👁️ <strong>ORACOLO (Costo: 30%):</strong> Rivela un indizio o lettere della parola.</li>
+                <li>⚔️ <strong>GLADIVS (Costo: 60%):</strong> Sconfigge istantaneamente il Cesare avversario attuale.</li>
+                <li>❤️ <strong>MEDICINA (Costo: 50%):</strong> Cura e ripristina 30 punti vita (HP) del tuo gladiatore.</li>
+              </ul>
             </div>
             
             <div class="modifiers-disclaimer text-left">
-              <p>⚠️ <strong>Modificatori Attivi:</strong></p>
+              <p>⚠️ <strong>Modificatori della Sfida:</strong></p>
               <p>Punteggio &gt; 15: <strong>Tempus</strong> (Il tempo cala da 12s a 8s)</p>
               <p>Punteggio &gt; 30: <strong>Caecus</strong> (Lettere parzialmente oscurate)</p>
               <p>Punteggio &gt; 45: <strong>Duplicem</strong> (Danno raddoppiato sugli errori)</p>
@@ -194,6 +213,15 @@
                 <span class="kbd-badge">[3]</span>
               </button>
               <span id="gladius-desc" class="sr-only">Sconfigge istantaneamente il nemico attuale ottenendo doppi punti. Richiede il 60% di Favore della Folla. Scorciatoia: Tasto 3.</span>
+
+              <!-- Medicina Health Power-Up -->
+              <button id="btn-ability-medicina" class="ability-btn locked" aria-disabled="true" aria-describedby="medicina-desc">
+                <span class="ability-icon">❤️</span>
+                <span class="ability-name">MEDICINA</span>
+                <span class="ability-cost">Costo: 50%</span>
+                <span class="kbd-badge">[4]</span>
+              </button>
+              <span id="medicina-desc" class="sr-only">Ripristina 30 punti vita. Richiede il 50% di Favore della Folla. Scorciatoia: Tasto 4 o M.</span>
             </div>
 
             <!-- Active Shield Notification -->
