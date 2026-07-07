@@ -1,0 +1,12 @@
+# Cartelle di dipendenze
+node_modules/
+
+# File di sistema e configurazioni agenti
+.agents/
+tests/
+jest.config.js
+package-lock.json
+package.json
+
+# Varie
+.DS_Store
