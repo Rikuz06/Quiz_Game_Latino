@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arena del Gladiatore - Quiz di Latino</title>
+  <meta name="description" content="Impara il latino giocando! Traduci parole latine, allena le declinazioni e le coniugazioni nell'Arena del Gladiatore.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="roman-theme" data-audio-state="suspended" data-audio-last-played="none">
+
+  <!-- Audio Context Initializer Overlay (Compliance with browser security guidelines) -->
+  <div id="audio-init-banner" class="audio-banner">
+    <span>🔊 Clicca ovunque per abilitare l'audio dell'arena!</span>
+  </div>
+
+  <!-- Animated Background Particles -->
+  <div class="arena-particles" aria-hidden="true">
+    <div class="particle particle-1"></div>
+    <div class="particle particle-2"></div>
+    <div class="particle particle-3"></div>
+    <div class="particle particle-4"></div>
+    <div class="particle particle-5"></div>
+    <div class="particle particle-6"></div>
+  </div>
+
+  <!-- Primary Centered Game Wrapper -->
+  <main id="arena-container" class="game-container">
+
+    <!-- Screen 1: Start Screen -->
+    <section id="start-screen" class="screen active" aria-hidden="false">
+      <div class="marble-panel centered-panel text-center roman-frame">
+        <div class="roman-frame-inner"></div>
+        <header class="arena-header">
+          <div class="title-glow-container">
+            <h1 class="cinzel-title arena-main-title">ARENA DEL GLADIATORE</h1>
+          </div>
+          <p class="cinzel-subtitle">LVDVS VERBORVM LATINORVM</p>
+          <p class="tagline-text">⚔️ Impara il latino combattendo nell'arena ⚔️</p>
+        </header>
+
+        <div class="game-description">
+          <p class="intro-text">
+            Benvenuto, Recluta! Entra nell'arena imperiale. Traduci correttamente i termini latini per colpire i gladiatori avversari. Sbaglia o fai scadere il tempo, e il nemico colpirà te! <strong>Allenati sulle declinazioni, le coniugazioni e il vocabolario base!</strong>
+          </p>
+
+          <!-- Game Mode Description -->
+          <div class="rules-container gold-border">
+            <h3 class="section-title cinzel-subtitle">Come Funziona</h3>
+            <div class="game-mode-desc">
+              <p>📖 <strong>Tutte le parole</strong> vengono chieste in <strong>ordine casuale</strong> — nomi, verbi, aggettivi, declinazioni e coniugazioni mescolate insieme!</p>
+              <p>⚔️ Rispondi correttamente per <strong>colpire il nemico</strong>. Sbaglia e subirai danni!</p>
+              <p>🏆 Sconfiggi tutti i gladiatori e traduci quante più parole possibili!</p>
+            </div>
+            
+            <div class="modifiers-disclaimer text-left">
+              <p>⚠️ <strong>Modificatori Attivi:</strong></p>
+              <p>Punteggio &gt; 15: <strong>Tempus</strong> (Il tempo cala da 12s a 8s)</p>
+              <p>Punteggio &gt; 30: <strong>Caecus</strong> (Lettere parzialmente oscurate)</p>
+              <p>Punteggio &gt; 45: <strong>Duplicem</strong> (Danno raddoppiato sugli errori)</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accessibility Preference Selection -->
+        <div class="accessibility-controls">
+          <button id="toggle-accessibility-motion" class="roman-btn gold-border access-btn" aria-label="Attiva o disattiva gli effetti di animazione e flash visivi">
+            EFFETTI VISIVI: ATTIVI
+          </button>
+        </div>
+
+        <button id="btn-start" class="roman-btn gold-border cinzel-title action-main-btn pulse-btn">ENTRA NELL'ARENA</button>
+      </div>
+    </section>
+
+    <!-- Screen 2: Battle Screen -->
+    <section id="battle-screen" class="screen hidden" aria-hidden="true">
+      
+      <!-- Top HUD Panel -->
+      <header class="hud-bar gold-border">
+        <!-- Player HP Panel -->
+        <div class="hud-item hp-hud">
+          <span class="hud-label">❤️ VITA</span>
+          <div id="player-hp-bar" class="hud-progress-outer hp-bar-outer" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" aria-label="Punti Vita del Giocatore" aria-valuetext="100 su 100 HP">
+            <div class="hud-progress-inner hp-bar-inner player-hp-fill" style="width: 100%;"></div>
+          </div>
+          <div class="progress-text-container text-center">
+            <span id="player-hp" class="progress-text">100</span><span> / 100</span>
+          </div>
+        </div>
+
+        <!-- Active Score -->
+        <div class="hud-item score-hud" aria-live="polite">
+          <span class="hud-label">🏆 PUNTEGGIO</span>
+          <span id="player-score" class="hud-value gold-text">0</span>
+        </div>
+
+        <!-- Current Win Streak -->
+        <div class="hud-item streak-hud" aria-live="polite">
+          <span class="hud-label">🔥 SERIE</span>
+          <span id="player-streak" class="hud-value gold-text">0</span>
+        </div>
+
+        <!-- Active Level Display -->
+        <div class="hud-item level-hud" aria-live="polite">
+          <span class="hud-label">📊 PROGRESSO</span>
+          <span id="level-display" class="hud-value gold-text">0 / 0</span>
+        </div>
+
+        <!-- Active Modifier Badges -->
+        <div class="hud-item modifiers-hud">
+          <span class="hud-label">⚡ MODIFICATORI</span>
+          <div class="modifiers-list">
+            <span id="modifier-tempus" class="badge modifier-badge hidden" title="Tempo accelerato attivato: i secondi calano!">⏱️ TEMPUS</span>
+            <span id="modifier-caecus" class="badge modifier-badge hidden" title="Lettere oscurate attivate: alcune lettere sono nascoste!">👁️ CAECUS</span>
+            <span id="modifier-double-damage" class="badge modifier-badge hidden" title="Danno raddoppiato attivato: gli errori costano doppio!">💀 DVPLICEM</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Symmetrical Combat Grid -->
+      <div class="combat-grid">
+        
+        <!-- Left Column: Player Status & Abilities -->
+        <aside class="marble-panel combat-panel player-side text-center roman-frame">
+          <div class="roman-frame-inner"></div>
+          <h2 class="cinzel-title">GLADIATORE</h2>
+          
+          <div class="player-avatar-container avatar-box">
+            <span class="avatar-icon">🛡️</span>
+          </div>
+
+          <!-- Crowd Favor Bar (Favor Populi) -->
+          <div class="progress-container">
+            <span class="progress-label cinzel-subtitle">FAVORE DEL POPOLO</span>
+            <div id="crowd-favor-bar" class="hud-progress-outer favor-bar-outer" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Favore della Folla" aria-valuetext="0 percento di favore">
+              <div class="hud-progress-inner favor-bar-inner" style="width: 0%;"></div>
+            </div>
+            <div class="progress-text-container">
+              <span id="player-favor-text" class="progress-text">0%</span>
+            </div>
+          </div>
+
+          <!-- Special Abilities Bar -->
+          <div class="abilities-section">
+            <h3 class="section-title-small cinzel-subtitle">Abilità Speciali</h3>
+            <div class="abilities-list">
+              <!-- Shield Ability -->
+              <button id="btn-ability-scutum" class="ability-btn locked" aria-disabled="true" aria-describedby="scutum-desc">
+                <span class="ability-icon">🛡️</span>
+                <span class="ability-name">SCVTVM</span>
+                <span class="ability-cost">Costo: 40%</span>
+                <span class="kbd-badge">[1]</span>
+              </button>
+              <span id="scutum-desc" class="sr-only">Assorbe il danno del prossimo errore. Richiede il 40% di Favore della Folla. Scorciatoia: Tasto 1.</span>
+
+              <!-- Oracle Hint Ability -->
+              <button id="btn-ability-oracolo" class="ability-btn locked" aria-disabled="true" aria-describedby="oracolo-desc">
+                <span class="ability-icon">👁️</span>
+                <span class="ability-name">ORACOLO</span>
+                <span class="ability-cost">Costo: 30%</span>
+                <span class="kbd-badge">[2]</span>
+              </button>
+              <span id="oracolo-desc" class="sr-only">Rivela un indizio o lettere parziali del termine. Richiede il 30% di Favore della Folla. Scorciatoia: Tasto 2.</span>
+
+              <!-- Gladius Instant Defeat -->
+              <button id="btn-ability-gladius" class="ability-btn locked" aria-disabled="true" aria-describedby="gladius-desc">
+                <span class="ability-icon">⚔️</span>
+                <span class="ability-name">GLADIVS</span>
+                <span class="ability-cost">Costo: 60%</span>
+                <span class="kbd-badge">[3]</span>
+              </button>
+              <span id="gladius-desc" class="sr-only">Sconfigge istantaneamente il nemico attuale ottenendo doppi punti. Richiede il 60% di Favore della Folla. Scorciatoia: Tasto 3.</span>
+            </div>
+
+            <!-- Active Shield Notification -->
+            <div id="status-scutum-active" class="shield-badge hidden" aria-live="polite">
+              🛡️ SCVTVM ATTIVO: Il prossimo colpo errato sarà parato!
+            </div>
+          </div>
+        </aside>
+
+        <!-- Center Column: Arena Core & Interaction -->
+        <main class="arena-core text-center">
+          
+          <!-- Speed Countdown Timer (Tempus) -->
+          <div id="timer-container" class="timer-box hidden">
+            <div class="timer-label cinzel-subtitle">⏱️ TEMPO RIMANENTE</div>
+            <div class="timer-bar-outer">
+              <div id="timer-bar" class="timer-bar-inner" style="width: 100%;"></div>
+            </div>
+            <div id="timer-countdown" class="timer-value">12.0s</div>
+          </div>
+
+          <!-- Active Vocabulary Word Card -->
+          <div id="vocab-card" class="marble-panel word-card-panel roman-frame" aria-live="polite">
+            <div class="roman-frame-inner"></div>
+            <h3 class="card-title cinzel-subtitle">📖 PAROLA LATINA</h3>
+            <div id="latin-word" class="vocab-word">lupus</div>
+            
+            <!-- Dynamic hint revealed by Oracolo -->
+            <div id="clue-display" class="vocab-clue" aria-live="polite"></div>
+          </div>
+
+          <!-- Interaction and Input Box -->
+          <div class="action-panel-box marble-panel roman-frame">
+            <div class="roman-frame-inner"></div>
+            <form id="answer-form" class="answer-form">
+              <div class="input-container">
+                <label for="input-answer" class="input-label">✍️ Traduci in Italiano:</label>
+                <input 
+                  type="text" 
+                  id="input-answer" 
+                  class="translation-input" 
+                  placeholder="Scrivi la traduzione qui..." 
+                  autocomplete="off" 
+                  required
+                >
+              </div>
+              <button type="submit" id="btn-submit" class="roman-btn gold-border cinzel-title strike-btn">⚔️ COLPISCI!</button>
+            </form>
+            
+            <!-- Message feedback alert region -->
+            <div id="feedback-message" class="battle-feedback" aria-live="assertive" aria-atomic="true"></div>
+          </div>
+
+        </main>
+
+        <!-- Right Column: Enemy Status -->
+        <aside class="marble-panel combat-panel enemy-side text-center roman-frame">
+          <div class="roman-frame-inner"></div>
+          <h2 id="enemy-name" class="cinzel-title enemy-name-glow">PROVOCATOR</h2>
+          <p id="enemy-title" class="enemy-title-text">Il Provocatore</p>
+          
+          <div class="enemy-avatar-container avatar-box enemy-avatar-upgraded">
+            <!-- Visual effect overlay for slash attacks -->
+            <div id="slash-flash" class="slash-flash-overlay"></div>
+            <div class="enemy-svg-art"></div>
+          </div>
+
+          <!-- Enemy Health Bar -->
+          <div class="progress-container">
+            <span class="progress-label cinzel-subtitle">VITA NEMICO</span>
+            <div id="enemy-hp-bar" class="hud-progress-outer hp-bar-outer" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" aria-label="Punti Vita del Nemico" aria-valuetext="100 su 100 HP">
+              <div class="hud-progress-inner hp-bar-inner enemy-hp-fill" style="width: 100%;"></div>
+            </div>
+            <div class="progress-text-container">
+              <span id="enemy-hp" class="progress-text">100</span><span> / 100</span>
+            </div>
+          </div>
+        </aside>
+
+      </div>
+
+    </section>
+
+    <!-- Screen 3: Game Over Screen -->
+    <section id="game-over-screen" class="screen hidden" aria-hidden="true">
+      <div class="marble-panel centered-panel text-center roman-frame">
+        <div class="roman-frame-inner"></div>
+        <header class="arena-header">
+          <h1 class="cinzel-title crimson-text">VALE, GLADIATORE!</h1>
+          <p class="cinzel-subtitle">Hai combattuto con onore, ma sei caduto nell'arena</p>
+          <p class="gameover-emoji">⚰️</p>
+        </header>
+
+        <!-- Symmetrical Final Stats Grid -->
+        <div class="stats-card gold-border">
+          <h3 class="section-title cinzel-subtitle">Statistiche Finali</h3>
+          
+          <div class="stats-grid">
+            <div class="stat-block gold-border">
+              <span class="stat-icon">🏆</span>
+              <span class="stat-label cinzel-subtitle">Punteggio</span>
+              <span id="stats-final-score" class="stat-number gold-text">0</span>
+            </div>
+            
+            <div class="stat-block gold-border">
+              <span class="stat-icon">⚔️</span>
+              <span class="stat-label cinzel-subtitle">Parole Tradotte</span>
+              <span id="stats-words-defeated" class="stat-number gold-text">0</span>
+            </div>
+
+            <div class="stat-block gold-border">
+              <span class="stat-icon">🔥</span>
+              <span class="stat-label cinzel-subtitle">Serie Massima</span>
+              <span id="stats-max-streak" class="stat-number gold-text">0</span>
+            </div>
+          </div>
+        </div>
+
+        <button id="btn-restart" class="roman-btn gold-border cinzel-title action-main-btn pulse-btn">🔄 RITENTA!</button>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="js/vocab.js" type="module"></script>
+  <script src="js/sound.js" type="module"></script>
+  <script src="js/app.js" type="module"></script>
+</body>
+</html>

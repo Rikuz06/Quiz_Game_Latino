@@ -1,0 +1,12 @@
+{
+  "name": "gladiator-arena-vocabulary-trainer",
+  "version": "1.0.0",
+  "description": "Gladiator Arena Vocabulary Trainer",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "puppeteer": "^22.12.1"
+  }
+}
