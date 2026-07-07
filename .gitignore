@@ -1,12 +1,15 @@
-# Cartelle di dipendenze
+# Cartelle di sistema e dipendenze
 node_modules/
-
-# File di sistema e configurazioni agenti
 .agents/
 tests/
+js/
+
+# File di configurazione e log
 jest.config.js
 package-lock.json
 package.json
+*.log
 
-# Varie
+# File di sistema macOS/Windows
 .DS_Store
+Thumbs.db
