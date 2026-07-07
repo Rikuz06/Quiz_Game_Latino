@@ -311,6 +311,7 @@ const ENEMY_TYPES = [
     color: "#1b5e20",
     accent: "#4caf50",
     icon: "emperor-augustus",
+    portrait: "img/augustus.png",
     title: "Il Fondatore dell'Impero"
   },
   {
@@ -318,6 +319,7 @@ const ENEMY_TYPES = [
     color: "#b71c1c",
     accent: "#f44336",
     icon: "emperor-nero",
+    portrait: "img/nero.png",
     title: "L'Artista Folle"
   },
   {
@@ -325,6 +327,7 @@ const ENEMY_TYPES = [
     color: "#4a148c",
     accent: "#ab47bc",
     icon: "emperor-caligula",
+    portrait: "img/caligula.png",
     title: "Il Tiranno Stravagante"
   },
   {
@@ -332,6 +335,7 @@ const ENEMY_TYPES = [
     color: "#0d47a1",
     accent: "#2196f3",
     icon: "emperor-trajan",
+    portrait: "img/trajan.png",
     title: "L'Ottimo Principe"
   },
   {
@@ -339,6 +343,7 @@ const ENEMY_TYPES = [
     color: "#004d40",
     accent: "#26a69a",
     icon: "emperor-hadrian",
+    portrait: "img/hadrian.png",
     title: "L'Imperatore Filosofo"
   },
   {
@@ -346,174 +351,28 @@ const ENEMY_TYPES = [
     color: "#3e2723",
     accent: "#8d6e63",
     icon: "emperor-marcus",
+    portrait: "img/aurelius.png",
     title: "Il Saggio Stoico"
   },
   {
-    name: "COMMODVS",
+    name: "CLAVDIVS",
     color: "#e65100",
     accent: "#ff9800",
-    icon: "emperor-commodus",
-    title: "Il Gladiatore Cesare"
+    icon: "emperor-claudius",
+    portrait: "img/claudius.png",
+    title: "L'Imperatore Erudito"
   },
   {
-    name: "CONSTANTINVS",
+    name: "TIBERIVS",
     color: "#37474f",
     accent: "#78909c",
-    icon: "emperor-constantine",
-    title: "Il Grande Riformatore"
+    icon: "emperor-tiberius",
+    portrait: "img/tiberius.png",
+    title: "L'Imperatore Solitario"
   }
 ];
 
 let currentEnemyType = ENEMY_TYPES[0];
-
-/**
- * Generate SVG imperial art based on enemy type
- */
-function generateEnemySVG(enemyType) {
-  const color = enemyType.color;
-  const accent = enemyType.accent;
-  
-  const svgTemplates = {
-    'emperor-augustus': `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="helm-grad-augustus" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:${accent};stop-opacity:1" />
-          <stop offset="100%" style="stop-color:${color};stop-opacity:1" />
-        </linearGradient>
-        <filter id="glow-augustus"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-      </defs>
-      <circle cx="60" cy="60" r="42" fill="url(#helm-grad-augustus)" stroke="#d4af37" stroke-width="2.5"/>
-      <path d="M35 60 Q45 35 60 35 Q75 35 85 60" fill="none" stroke="#ffd700" stroke-width="4" stroke-dasharray="2 6" stroke-linecap="round"/>
-      <path d="M30 65 C32 82 50 90 60 90 C70 90 88 82 90 65" fill="none" stroke="#ffd700" stroke-width="4" stroke-dasharray="2 6" stroke-linecap="round"/>
-      <text x="60" y="66" font-family="'Cinzel', serif" font-weight="bold" font-size="14" fill="#ffd700" text-anchor="middle" filter="url(#glow-augustus)">SPQR</text>
-    </svg>`,
-    'emperor-nero': `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="helm-grad-nero" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:${accent};stop-opacity:1" />
-          <stop offset="100%" style="stop-color:${color};stop-opacity:1" />
-        </linearGradient>
-        <filter id="glow-nero"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-      </defs>
-      <circle cx="60" cy="60" r="42" fill="url(#helm-grad-nero)" stroke="#d4af37" stroke-width="2.5"/>
-      <path d="M35 65 L40 45 L50 53 L60 35 L70 53 L80 45 L85 65 Z" fill="#ffd700" stroke="#b8860b" stroke-width="1"/>
-      <path d="M42 45 Q50 25 46 15 Q55 28 60 25 Q65 15 70 32 Q78 20 78 45" fill="none" stroke="#ff3d00" stroke-width="2.5" filter="url(#glow-nero)"/>
-      <circle cx="60" cy="65" r="5" fill="#ffd700" filter="url(#glow-nero)"/>
-    </svg>`,
-    'emperor-caligula': `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="helm-grad-caligula" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:${accent};stop-opacity:1" />
-          <stop offset="100%" style="stop-color:${color};stop-opacity:1" />
-        </linearGradient>
-        <filter id="glow-caligula"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-      </defs>
-      <circle cx="60" cy="60" r="42" fill="url(#helm-grad-caligula)" stroke="#d4af37" stroke-width="2.5"/>
-      <path d="M45 75 Q42 55 52 45 Q62 35 68 45 Q70 55 65 65 L68 75 Z" fill="#ffd700" opacity="0.8"/>
-      <path d="M30 48 Q60 40 90 48" fill="none" stroke="#d4af37" stroke-width="3" filter="url(#glow-caligula)"/>
-      <path d="M35 48 L32 38 L45 42 L60 30 L75 42 L88 38 L85 48" fill="none" stroke="#ffd700" stroke-width="2"/>
-    </svg>`,
-    'emperor-tiberius': `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="helm-grad-tiberius" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:${accent};stop-opacity:1" />
-          <stop offset="100%" style="stop-color:${color};stop-opacity:1" />
-        </linearGradient>
-        <filter id="glow-tiberius"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-      </defs>
-      <circle cx="60" cy="60" r="42" fill="url(#helm-grad-tiberius)" stroke="#d4af37" stroke-width="2.5"/>
-      <path d="M40 75 L40 55 L80 55 L80 75 Z" fill="#ffd700" opacity="0.6"/>
-      <path d="M35 55 L60 38 L85 55 Z" fill="#ffd700" stroke="#b8860b" stroke-width="1"/>
-      <line x1="50" y1="55" x2="50" y2="75" stroke="#1a1a1a" stroke-width="2"/>
-      <line x1="60" y1="55" x2="60" y2="75" stroke="#1a1a1a" stroke-width="2"/>
-      <line x1="70" y1="55" x2="70" y2="75" stroke="#1a1a1a" stroke-width="2"/>
-    </svg>`,
-    'emperor-claudius': `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="helm-grad-claudius" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:${accent};stop-opacity:1" />
-          <stop offset="100%" style="stop-color:${color};stop-opacity:1" />
-        </linearGradient>
-        <filter id="glow-claudius"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-      </defs>
-      <circle cx="60" cy="60" r="42" fill="url(#helm-grad-claudius)" stroke="#d4af37" stroke-width="2.5"/>
-      <path d="M35 70 Q50 65 60 70 Q70 65 85 70 L85 45 Q70 40 60 45 Q50 40 35 45 Z" fill="#f5f2eb" stroke="#d4af37" stroke-width="1.5"/>
-      <line x1="40" y1="52" x2="55" y2="52" stroke="#8b795e" stroke-width="1.5"/>
-      <line x1="40" y1="60" x2="55" y2="60" stroke="#8b795e" stroke-width="1.5"/>
-      <line x1="65" y1="52" x2="80" y2="52" stroke="#8b795e" stroke-width="1.5"/>
-      <line x1="65" y1="60" x2="80" y2="60" stroke="#8b795e" stroke-width="1.5"/>
-    </svg>`,
-    'emperor-trajan': `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="helm-grad-trajan" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:${accent};stop-opacity:1" />
-          <stop offset="100%" style="stop-color:${color};stop-opacity:1" />
-        </linearGradient>
-        <filter id="glow-trajan"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-      </defs>
-      <circle cx="60" cy="60" r="42" fill="url(#helm-grad-trajan)" stroke="#d4af37" stroke-width="2.5"/>
-      <path d="M60 35 L50 50 L35 45 L40 60 L52 65 L60 85 L68 65 L80 60 L85 45 L70 50 Z" fill="#ffd700" stroke="#b8860b" stroke-width="1" filter="url(#glow-trajan)"/>
-      <circle cx="60" cy="40" r="3" fill="#1a1a1a"/>
-    </svg>`,
-    'emperor-hadrian': `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="helm-grad-hadrian" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:${accent};stop-opacity:1" />
-          <stop offset="100%" style="stop-color:${color};stop-opacity:1" />
-        </linearGradient>
-        <filter id="glow-hadrian"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-      </defs>
-      <circle cx="60" cy="60" r="42" fill="url(#helm-grad-hadrian)" stroke="#d4af37" stroke-width="2.5"/>
-      <path d="M35 72 C35 45 85 45 85 72 Z" fill="#ffd700" opacity="0.7"/>
-      <circle cx="60" cy="52" r="5" fill="#1a1a1a" filter="url(#glow-hadrian)"/>
-      <rect x="30" y="72" width="60" height="6" fill="#d4af37"/>
-    </svg>`,
-    'emperor-marcus': `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="helm-grad-marcus" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:${accent};stop-opacity:1" />
-          <stop offset="100%" style="stop-color:${color};stop-opacity:1" />
-        </linearGradient>
-        <filter id="glow-marcus"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-      </defs>
-      <circle cx="60" cy="60" r="42" fill="url(#helm-grad-marcus)" stroke="#d4af37" stroke-width="2.5"/>
-      <circle cx="60" cy="60" r="28" fill="none" stroke="#ffd700" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.6"/>
-      <text x="60" y="42" font-size="12" fill="#ffd700" text-anchor="middle" filter="url(#glow-marcus)">★</text>
-      <text x="40" y="55" font-size="12" fill="#ffd700" text-anchor="middle" filter="url(#glow-marcus)">★</text>
-      <text x="80" y="55" font-size="12" fill="#ffd700" text-anchor="middle" filter="url(#glow-marcus)">★</text>
-      <text x="50" y="75" font-size="12" fill="#ffd700" text-anchor="middle" filter="url(#glow-marcus)">★</text>
-      <text x="70" y="75" font-size="12" fill="#ffd700" text-anchor="middle" filter="url(#glow-marcus)">★</text>
-    </svg>`,
-    'emperor-commodus': `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="helm-grad-commodus" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:${accent};stop-opacity:1" />
-          <stop offset="100%" style="stop-color:${color};stop-opacity:1" />
-        </linearGradient>
-        <filter id="glow-commodus"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-      </defs>
-      <ellipse cx="60" cy="52" rx="38" ry="42" fill="url(#helm-grad-commodus)" stroke="#d4af37" stroke-width="2.5"/>
-      <path d="M30 48 Q60 42 90 48 L88 60 Q60 54 32 60Z" fill="#1a1a1a" opacity="0.8"/>
-      <path d="M44 76 Q60 82 76 76" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round"/>
-      <path d="M22 50 C10 30 15 80 60 92 C105 80 110 30 98 50" fill="none" stroke="#ffd700" stroke-width="2" stroke-dasharray="2 4"/>
-    </svg>`,
-    'emperor-constantine': `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="helm-grad-constantine" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:${accent};stop-opacity:1" />
-          <stop offset="100%" style="stop-color:${color};stop-opacity:1" />
-        </linearGradient>
-        <filter id="glow-constantine"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-      </defs>
-      <path d="M22 58 Q22 15 60 10 Q98 15 98 58 Q98 92 60 100 Q22 92 22 58Z" fill="url(#helm-grad-constantine)" stroke="#d4af37" stroke-width="2.5"/>
-      <path d="M60 12 L60 85" stroke="#d4af37" stroke-width="3" filter="url(#glow-constantine)"/>
-      <path d="M45 28 L75 28" stroke="#d4af37" stroke-width="3" filter="url(#glow-constantine)"/>
-      <text x="60" y="24" font-size="12" fill="#ffd700" text-anchor="middle" font-weight="bold" filter="url(#glow-constantine)">XP</text>
-    </svg>`
-  };
-  
-  return svgTemplates[enemyType.icon] || svgTemplates['emperor-augustus'];
-}
 
 /**
  * Render the current enemy in the avatar container
@@ -531,19 +390,14 @@ function renderEnemy(enemyType) {
     enemyTitleEl.textContent = enemyType.title;
   }
   
+  const portraitEl = document.getElementById('enemy-portrait');
+  if (portraitEl) {
+    portraitEl.src = enemyType.portrait;
+    portraitEl.alt = `Ritratto di ${enemyType.name}`;
+  }
+
   const avatarContainer = document.querySelector('.enemy-avatar-container');
   if (avatarContainer) {
-    // Remove old avatar icon, keep slash flash
-    const oldIcon = avatarContainer.querySelector('.avatar-icon');
-    if (oldIcon) oldIcon.remove();
-    const oldSvg = avatarContainer.querySelector('.enemy-svg-art');
-    if (oldSvg) oldSvg.remove();
-    
-    const svgWrapper = document.createElement('div');
-    svgWrapper.className = 'enemy-svg-art';
-    svgWrapper.innerHTML = generateEnemySVG(enemyType);
-    avatarContainer.appendChild(svgWrapper);
-    
     // Update avatar container border color to match enemy
     avatarContainer.style.borderColor = enemyType.accent;
     avatarContainer.style.boxShadow = `0 0 20px ${enemyType.color}44, inset 0 0 15px ${enemyType.color}22, 0 4px 12px rgba(0,0,0,0.3)`;

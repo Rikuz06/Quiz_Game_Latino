@@ -571,6 +571,7 @@ body {
   font-family: var(--font-headers);
   font-size: 1.15rem;
   font-weight: 700;
+  color: var(--color-gold-roman);
 }
 
 .header-modifiers {
@@ -703,10 +704,11 @@ body {
 .correct-solution {
   display: inline-block;
   margin-top: 5px;
-  color: var(--color-gold-bright) !important;
+  color: var(--color-text-light) !important;
+  font-weight: bold;
   font-size: 1.05rem;
-  background-color: rgba(128, 0, 32, 0.2);
-  border: 1px dashed var(--color-gold-muted);
+  background-color: rgba(169, 27, 13, 0.15);
+  border: 1px dashed var(--color-crimson);
   padding: 4px 10px;
   border-radius: 4px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -820,6 +822,14 @@ body {
 }
 
 .avatar-icon {
+  display: block;
+}
+
+.enemy-portrait {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
   display: block;
 }
 
