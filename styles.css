@@ -479,23 +479,237 @@ body {
   border-color: var(--color-gold-bright);
 }
 
-/* Top HUD bar styling */
-.hud-bar {
-  display: flex;
-  justify-content: space-around;
+/* Symmetrical Top Battle Header (Arcade/Fighting game layout) */
+.battle-header {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1.2fr;
   align-items: center;
   width: 100%;
   max-width: var(--max-game-width);
   margin-bottom: 25px;
   background-color: var(--color-stone-grid);
-  background-image: linear-gradient(135deg, rgba(26, 21, 18, 0.9) 0%, rgba(30, 25, 20, 0.9) 100%);
+  background-image: linear-gradient(180deg, rgba(30, 25, 22, 0.95) 0%, rgba(20, 16, 14, 0.98) 100%);
   border: 3px double var(--color-gold);
   border-radius: 8px;
-  padding: 15px 10px;
+  padding: 15px 25px;
   box-sizing: border-box;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(212, 175, 55, 0.1);
-  flex-wrap: wrap;
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.8),
+    inset 0 1px 0 rgba(255, 215, 0, 0.15);
+  position: relative;
+  z-index: 10;
   gap: 15px;
+}
+
+.header-fighter {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fighter-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--font-headers);
+}
+
+.fighter-name {
+  font-size: 1.15rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  color: var(--color-text-light);
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.enemy-fighter .fighter-name {
+  color: #ff5252;
+  text-shadow: 0 0 12px rgba(255, 82, 82, 0.4);
+}
+
+.hp-numeric-display {
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: var(--color-gold-light);
+}
+
+/* Center Column Stats & Modifiers */
+.header-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-left: 1px solid rgba(212, 175, 55, 0.2);
+  border-right: 1px solid rgba(212, 175, 55, 0.2);
+  padding: 0 15px;
+}
+
+.stats-mini-row {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  gap: 10px;
+}
+
+.mini-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.mini-label {
+  font-family: var(--font-headers);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  color: var(--color-text-gold);
+  margin-bottom: 2px;
+}
+
+.mini-val {
+  font-family: var(--font-headers);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.header-modifiers {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Non-blocking Victory Banner Overlay */
+.victory-banner-overlay {
+  position: fixed;
+  top: 15%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  width: 90%;
+  max-width: 550px;
+}
+
+.victory-banner-overlay.active {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: auto;
+}
+
+.victory-banner-content {
+  background-color: var(--color-stone-darkest);
+  background-image: 
+    radial-gradient(circle at 50% 50%, rgba(128, 0, 32, 0.45) 0%, rgba(17, 13, 10, 0.95) 100%),
+    linear-gradient(rgba(212, 175, 55, 0.05) 1px, transparent 1px);
+  border: 4px double var(--color-gold);
+  border-radius: 8px;
+  padding: 25px;
+  text-align: center;
+  box-shadow: 
+    0 15px 45px rgba(0, 0, 0, 0.9),
+    0 0 30px rgba(212, 175, 55, 0.3);
+}
+
+.laurel-wreath-animated {
+  font-size: 3rem;
+  margin-bottom: 10px;
+  animation: rotateWreath 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes rotateWreath {
+  from { transform: rotate(-8deg) scale(1); }
+  to { transform: rotate(8deg) scale(1.15); }
+}
+
+#victory-banner-title {
+  color: var(--color-gold-bright);
+  font-size: 2.2rem;
+  margin: 0 0 10px 0;
+  text-shadow: 
+    0 0 15px rgba(255, 215, 0, 0.6),
+    0 2px 4px rgba(0, 0, 0, 0.9);
+}
+
+#victory-banner-message {
+  font-family: var(--font-body);
+  font-size: 1.15rem;
+  color: var(--color-text-light);
+  margin: 0;
+  font-style: italic;
+}
+
+/* Trophy Log Section */
+.trophy-section {
+  width: 100%;
+  margin-top: 25px;
+  background-color: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  border-radius: 4px;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+.defeated-emperors-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+  max-height: 150px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.trophy-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: rgba(128, 0, 32, 0.15);
+  border-left: 3px solid var(--color-gold);
+  border-radius: 0 4px 4px 0;
+  font-family: var(--font-headers);
+  font-size: 0.8rem;
+  color: var(--color-text-light);
+  animation: slideTrophy 0.3s ease-out;
+}
+
+@keyframes slideTrophy {
+  from { opacity: 0; transform: translateX(15px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.trophy-icon {
+  font-size: 1rem;
+}
+
+.trophy-name {
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  color: var(--color-gold-roman);
+}
+
+.no-trophies-text {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: #7a6b60;
+  font-style: italic;
+}
+
+/* Correct Answer Highlights */
+.correct-solution {
+  display: inline-block;
+  margin-top: 5px;
+  color: var(--color-gold-bright) !important;
+  font-size: 1.05rem;
+  background-color: rgba(128, 0, 32, 0.2);
+  border: 1px dashed var(--color-gold-muted);
+  padding: 4px 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .hud-item {

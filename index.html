@@ -79,44 +79,64 @@
     <!-- Screen 2: Battle Screen -->
     <section id="battle-screen" class="screen hidden" aria-hidden="true">
       
-      <!-- Top HUD Panel -->
-      <header class="hud-bar gold-border">
-        <!-- Player HP Panel -->
-        <div class="hud-item hp-hud">
-          <span class="hud-label">❤️ VITA</span>
+      <!-- Non-blocking Victory Banner Overlay -->
+      <div id="victory-banner" class="victory-banner-overlay hidden" aria-live="assertive">
+        <div class="victory-banner-content gold-border">
+          <div class="laurel-wreath-animated">👑</div>
+          <h2 id="victory-banner-title" class="cinzel-title">CESARE SCONFITTO!</h2>
+          <p id="victory-banner-message">Augusto è caduto sotto i tuoi colpi!</p>
+        </div>
+      </div>
+
+      <!-- Top Symmetrical Health Header -->
+      <header class="battle-header gold-border">
+        <!-- Left Side: Player HP & Name -->
+        <div class="header-fighter player-fighter">
+          <div class="fighter-info">
+            <span class="fighter-name cinzel-title">GLADIATORE</span>
+            <div class="hp-numeric-display">
+              <span id="player-hp" class="progress-text">100</span><span> / 100 HP</span>
+            </div>
+          </div>
           <div id="player-hp-bar" class="hud-progress-outer hp-bar-outer" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" aria-label="Punti Vita del Giocatore" aria-valuetext="100 su 100 HP">
             <div class="hud-progress-inner hp-bar-inner player-hp-fill" style="width: 100%;"></div>
           </div>
-          <div class="progress-text-container text-center">
-            <span id="player-hp" class="progress-text">100</span><span> / 100</span>
+        </div>
+
+        <!-- Center: Round Stats & Modifiers -->
+        <div class="header-center" aria-live="polite">
+          <div class="stats-mini-row">
+            <div class="mini-stat">
+              <span class="mini-label">PUNTEGGIO</span>
+              <span id="player-score" class="mini-val gold-text">0</span>
+            </div>
+            <div class="mini-stat">
+              <span class="mini-label">SERIE</span>
+              <span id="player-streak" class="mini-val gold-text">0</span>
+            </div>
+            <div class="mini-stat">
+              <span class="mini-label">PROGRESSO</span>
+              <span id="level-display" class="mini-val gold-text">0 / 0</span>
+            </div>
           </div>
-        </div>
-
-        <!-- Active Score -->
-        <div class="hud-item score-hud" aria-live="polite">
-          <span class="hud-label">🏆 PUNTEGGIO</span>
-          <span id="player-score" class="hud-value gold-text">0</span>
-        </div>
-
-        <!-- Current Win Streak -->
-        <div class="hud-item streak-hud" aria-live="polite">
-          <span class="hud-label">🔥 SERIE</span>
-          <span id="player-streak" class="hud-value gold-text">0</span>
-        </div>
-
-        <!-- Active Level Display -->
-        <div class="hud-item level-hud" aria-live="polite">
-          <span class="hud-label">📊 PROGRESSO</span>
-          <span id="level-display" class="hud-value gold-text">0 / 0</span>
-        </div>
-
-        <!-- Active Modifier Badges -->
-        <div class="hud-item modifiers-hud">
-          <span class="hud-label">⚡ MODIFICATORI</span>
-          <div class="modifiers-list">
+          <!-- Active Modifier Badges -->
+          <div class="header-modifiers">
             <span id="modifier-tempus" class="badge modifier-badge hidden" title="Tempo accelerato attivato: i secondi calano!">⏱️ TEMPUS</span>
             <span id="modifier-caecus" class="badge modifier-badge hidden" title="Lettere oscurate attivate: alcune lettere sono nascoste!">👁️ CAECUS</span>
             <span id="modifier-double-damage" class="badge modifier-badge hidden" title="Danno raddoppiato attivato: gli errori costano doppio!">💀 DVPLICEM</span>
+          </div>
+        </div>
+
+        <!-- Right Side: Enemy HP & Name -->
+        <div class="header-fighter enemy-fighter">
+          <div class="fighter-info text-right">
+            <span id="enemy-name" class="fighter-name cinzel-title enemy-name-glow">AVGVSTVS</span>
+            <div class="hp-numeric-display">
+              <span id="enemy-hp" class="progress-text">100</span><span> / 100 HP</span>
+            </div>
+          </div>
+          <div id="enemy-hp-bar" class="hud-progress-outer hp-bar-outer" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" aria-label="Punti Vita del Nemico" aria-valuetext="100 su 100 HP">
+            <div class="hud-progress-inner hp-bar-inner enemy-hp-fill" style="width: 100%;"></div>
           </div>
         </div>
       </header>
@@ -229,11 +249,11 @@
 
         </main>
 
-        <!-- Right Column: Enemy Status -->
+        <!-- Right Column: Enemy Status & Trophies -->
         <aside class="marble-panel combat-panel enemy-side text-center roman-frame">
           <div class="roman-frame-inner"></div>
-          <h2 id="enemy-name" class="cinzel-title enemy-name-glow">PROVOCATOR</h2>
-          <p id="enemy-title" class="enemy-title-text">Il Provocatore</p>
+          <h2 id="enemy-sidebar-title" class="cinzel-title enemy-name-glow">AVVERSARIO</h2>
+          <p id="enemy-title" class="enemy-title-text">L'Imperatore</p>
           
           <div class="enemy-avatar-container avatar-box enemy-avatar-upgraded">
             <!-- Visual effect overlay for slash attacks -->
@@ -241,14 +261,11 @@
             <div class="enemy-svg-art"></div>
           </div>
 
-          <!-- Enemy Health Bar -->
-          <div class="progress-container">
-            <span class="progress-label cinzel-subtitle">VITA NEMICO</span>
-            <div id="enemy-hp-bar" class="hud-progress-outer hp-bar-outer" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" aria-label="Punti Vita del Nemico" aria-valuetext="100 su 100 HP">
-              <div class="hud-progress-inner hp-bar-inner enemy-hp-fill" style="width: 100%;"></div>
-            </div>
-            <div class="progress-text-container">
-              <span id="enemy-hp" class="progress-text">100</span><span> / 100</span>
+          <!-- Trophy list of defeated emperors -->
+          <div class="trophy-section">
+            <h3 class="section-title-small cinzel-subtitle">🏛️ TRIONFI IMPERIALI</h3>
+            <div id="defeated-emperors-list" class="defeated-emperors-list">
+              <span class="no-trophies-text">Nessun Cesare sconfitto</span>
             </div>
           </div>
         </aside>

@@ -23,6 +23,7 @@ let favor = 0;
 let scutumActive = false;
 let enemyHP = 100;
 let activeWord = null;
+let defeatedEmperors = [];
 
 // Shuffled word queue: all words in random order
 let wordQueue = [];
@@ -88,13 +89,53 @@ function transitionTo(newState) {
   }
 }
 
+function getCurrentLevel() {
+  if (score <= 5) return 1;
+  if (score <= 15) return 2;
+  if (score <= 30) return 3;
+  if (score <= 50) return 4;
+  return 5;
+}
+
+function showVictoryBanner(emperorName) {
+  const banner = document.getElementById('victory-banner');
+  const bannerTitle = document.getElementById('victory-banner-title');
+  const bannerMsg = document.getElementById('victory-banner-message');
+  if (banner) {
+    if (bannerTitle) bannerTitle.textContent = "CESARE SCONFITTO!";
+    if (bannerMsg) bannerMsg.textContent = `${emperorName} ha ceduto al tuo valore nell'arena!`;
+    banner.classList.remove('hidden');
+    banner.classList.add('active');
+    setTimeout(() => {
+      banner.classList.remove('active');
+      banner.classList.add('hidden');
+    }, 2500);
+  }
+}
+
+function updateTrophyUI() {
+  const listEl = document.getElementById('defeated-emperors-list');
+  if (listEl) {
+    if (defeatedEmperors.length === 0) {
+      listEl.innerHTML = '<span class="no-trophies-text">Nessun Cesare sconfitto</span>';
+    } else {
+      listEl.innerHTML = defeatedEmperors.map(name => `
+        <div class="trophy-item">
+          <span class="trophy-icon">👑</span>
+          <span class="trophy-name">${name}</span>
+        </div>
+      `).join('');
+    }
+  }
+}
+
 /**
  * Helper to update feedback messages
  */
 function showFeedback(msg) {
   const fb = document.getElementById('feedback-message');
   if (fb) {
-    fb.textContent = msg;
+    fb.innerHTML = msg;
   }
 }
 
@@ -266,212 +307,212 @@ function startTimer() {
  */
 const ENEMY_TYPES = [
   {
-    name: "PROVOCATOR",
-    color: "#c62828",
-    accent: "#ff5252",
-    icon: "helmet-provocator",
-    title: "Il Provocatore"
+    name: "AVGVSTVS",
+    color: "#1b5e20",
+    accent: "#4caf50",
+    icon: "emperor-augustus",
+    title: "Il Fondatore dell'Impero"
   },
   {
-    name: "RETIARIVS",
-    color: "#1565C0",
-    accent: "#42A5F5",
-    icon: "helmet-retiarius",
-    title: "Il Reziario"
+    name: "NERO",
+    color: "#b71c1c",
+    accent: "#f44336",
+    icon: "emperor-nero",
+    title: "L'Artista Folle"
   },
   {
-    name: "SECVTOR",
-    color: "#2E7D32",
-    accent: "#66BB6A",
-    icon: "helmet-secutor",
-    title: "Il Secutore"
+    name: "CALIGVLA",
+    color: "#4a148c",
+    accent: "#ab47bc",
+    icon: "emperor-caligula",
+    title: "Il Tiranno Stravagante"
   },
   {
-    name: "MIRMILLO",
-    color: "#E65100",
-    accent: "#FF9800",
-    icon: "helmet-murmillo",
-    title: "Il Mirmillone"
+    name: "TRAIANVS",
+    color: "#0d47a1",
+    accent: "#2196f3",
+    icon: "emperor-trajan",
+    title: "L'Ottimo Principe"
   },
   {
-    name: "THREX",
-    color: "#6A1B9A",
-    accent: "#AB47BC",
-    icon: "helmet-thraex",
-    title: "Il Trace"
+    name: "HADRIANVS",
+    color: "#004d40",
+    accent: "#26a69a",
+    icon: "emperor-hadrian",
+    title: "L'Imperatore Filosofo"
   },
   {
-    name: "DIMACHAERVS",
-    color: "#4E342E",
-    accent: "#8D6E63",
-    icon: "helmet-dimachaerus",
-    title: "Il Dimachero"
+    name: "MARCVS AVRELIVS",
+    color: "#3e2723",
+    accent: "#8d6e63",
+    icon: "emperor-marcus",
+    title: "Il Saggio Stoico"
   },
   {
-    name: "HOPLOMACHUS",
-    color: "#00695C",
-    accent: "#26A69A",
-    icon: "helmet-hoplomachus",
-    title: "L'Oplomaco"
+    name: "COMMODVS",
+    color: "#e65100",
+    accent: "#ff9800",
+    icon: "emperor-commodus",
+    title: "Il Gladiatore Cesare"
   },
   {
-    name: "EQVES",
-    color: "#37474F",
-    accent: "#78909C",
-    icon: "helmet-eques",
-    title: "L'Equite"
+    name: "CONSTANTINVS",
+    color: "#37474f",
+    accent: "#78909c",
+    icon: "emperor-constantine",
+    title: "Il Grande Riformatore"
   }
 ];
 
 let currentEnemyType = ENEMY_TYPES[0];
 
 /**
- * Generate SVG gladiator helmet art based on enemy type
+ * Generate SVG imperial art based on enemy type
  */
 function generateEnemySVG(enemyType) {
   const color = enemyType.color;
   const accent = enemyType.accent;
   
   const svgTemplates = {
-    'helmet-provocator': `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    'emperor-augustus': `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <linearGradient id="helm-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <linearGradient id="helm-grad-augustus" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" style="stop-color:${accent};stop-opacity:1" />
           <stop offset="100%" style="stop-color:${color};stop-opacity:1" />
         </linearGradient>
-        <filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <filter id="glow-augustus"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
       </defs>
-      <ellipse cx="60" cy="50" rx="38" ry="42" fill="url(#helm-grad)" stroke="#d4af37" stroke-width="2.5"/>
-      <path d="M22 50 Q30 85 60 95 Q90 85 98 50" fill="${color}" stroke="#d4af37" stroke-width="1.5" opacity="0.9"/>
-      <rect x="25" y="55" width="70" height="8" rx="4" fill="#1a1a1a" opacity="0.85"/>
-      <circle cx="42" cy="59" r="4" fill="${accent}" filter="url(#glow)"/>
-      <circle cx="78" cy="59" r="4" fill="${accent}" filter="url(#glow)"/>
-      <path d="M35 75 Q60 82 85 75" fill="none" stroke="#1a1a1a" stroke-width="2" opacity="0.6"/>
-      <path d="M60 8 L55 22 L65 22 Z" fill="#d4af37"/>
-      <line x1="60" y1="2" x2="60" y2="12" stroke="#d4af37" stroke-width="2"/>
+      <circle cx="60" cy="60" r="42" fill="url(#helm-grad-augustus)" stroke="#d4af37" stroke-width="2.5"/>
+      <path d="M35 60 Q45 35 60 35 Q75 35 85 60" fill="none" stroke="#ffd700" stroke-width="4" stroke-dasharray="2 6" stroke-linecap="round"/>
+      <path d="M30 65 C32 82 50 90 60 90 C70 90 88 82 90 65" fill="none" stroke="#ffd700" stroke-width="4" stroke-dasharray="2 6" stroke-linecap="round"/>
+      <text x="60" y="66" font-family="'Cinzel', serif" font-weight="bold" font-size="14" fill="#ffd700" text-anchor="middle" filter="url(#glow-augustus)">SPQR</text>
     </svg>`,
-    'helmet-retiarius': `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    'emperor-nero': `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <linearGradient id="helm-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <linearGradient id="helm-grad-nero" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" style="stop-color:${accent};stop-opacity:1" />
           <stop offset="100%" style="stop-color:${color};stop-opacity:1" />
         </linearGradient>
-        <filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <filter id="glow-nero"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
       </defs>
-      <circle cx="60" cy="55" r="38" fill="url(#helm-grad)" stroke="#d4af37" stroke-width="2.5"/>
-      <path d="M30 45 Q60 35 90 45 Q95 65 90 75 Q60 90 30 75 Q25 65 30 45Z" fill="${color}" stroke="#d4af37" stroke-width="1" opacity="0.7"/>
-      <line x1="30" y1="50" x2="90" y2="50" stroke="#d4af37" stroke-width="1" opacity="0.5"/>
-      <line x1="35" y1="60" x2="85" y2="60" stroke="#d4af37" stroke-width="1" opacity="0.5"/>
-      <line x1="40" y1="70" x2="80" y2="70" stroke="#d4af37" stroke-width="1" opacity="0.5"/>
-      <line x1="50" y1="40" x2="50" y2="80" stroke="#d4af37" stroke-width="1" opacity="0.3"/>
-      <line x1="70" y1="40" x2="70" y2="80" stroke="#d4af37" stroke-width="1" opacity="0.3"/>
-      <circle cx="45" cy="55" r="5" fill="#0d47a1" stroke="${accent}" stroke-width="1.5" filter="url(#glow)"/>
-      <circle cx="75" cy="55" r="5" fill="#0d47a1" stroke="${accent}" stroke-width="1.5" filter="url(#glow)"/>
-      <path d="M15 30 L25 15 L35 25" fill="none" stroke="#d4af37" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="60" cy="60" r="42" fill="url(#helm-grad-nero)" stroke="#d4af37" stroke-width="2.5"/>
+      <path d="M35 65 L40 45 L50 53 L60 35 L70 53 L80 45 L85 65 Z" fill="#ffd700" stroke="#b8860b" stroke-width="1"/>
+      <path d="M42 45 Q50 25 46 15 Q55 28 60 25 Q65 15 70 32 Q78 20 78 45" fill="none" stroke="#ff3d00" stroke-width="2.5" filter="url(#glow-nero)"/>
+      <circle cx="60" cy="65" r="5" fill="#ffd700" filter="url(#glow-nero)"/>
     </svg>`,
-    'helmet-secutor': `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    'emperor-caligula': `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <linearGradient id="helm-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <linearGradient id="helm-grad-caligula" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" style="stop-color:${accent};stop-opacity:1" />
           <stop offset="100%" style="stop-color:${color};stop-opacity:1" />
         </linearGradient>
-        <filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <filter id="glow-caligula"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
       </defs>
-      <path d="M25 60 Q25 20 60 15 Q95 20 95 60 Q95 90 60 100 Q25 90 25 60Z" fill="url(#helm-grad)" stroke="#d4af37" stroke-width="2.5"/>
-      <path d="M30 55 Q60 50 90 55 L88 65 Q60 60 32 65Z" fill="#1a1a1a" opacity="0.8"/>
-      <circle cx="45" cy="58" r="4" fill="${accent}" filter="url(#glow)"/>
-      <circle cx="75" cy="58" r="4" fill="${accent}" filter="url(#glow)"/>
-      <path d="M45 78 Q60 85 75 78" fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
-      <path d="M60 15 Q55 5 60 2 Q65 5 60 15" fill="#d4af37"/>
+      <circle cx="60" cy="60" r="42" fill="url(#helm-grad-caligula)" stroke="#d4af37" stroke-width="2.5"/>
+      <path d="M45 75 Q42 55 52 45 Q62 35 68 45 Q70 55 65 65 L68 75 Z" fill="#ffd700" opacity="0.8"/>
+      <path d="M30 48 Q60 40 90 48" fill="none" stroke="#d4af37" stroke-width="3" filter="url(#glow-caligula)"/>
+      <path d="M35 48 L32 38 L45 42 L60 30 L75 42 L88 38 L85 48" fill="none" stroke="#ffd700" stroke-width="2"/>
     </svg>`,
-    'helmet-murmillo': `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    'emperor-tiberius': `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <linearGradient id="helm-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <linearGradient id="helm-grad-tiberius" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" style="stop-color:${accent};stop-opacity:1" />
           <stop offset="100%" style="stop-color:${color};stop-opacity:1" />
         </linearGradient>
-        <filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <filter id="glow-tiberius"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
       </defs>
-      <ellipse cx="60" cy="55" rx="40" ry="40" fill="url(#helm-grad)" stroke="#d4af37" stroke-width="2.5"/>
-      <path d="M35 10 Q60 0 85 10 Q75 25 60 20 Q45 25 35 10Z" fill="#d4af37" opacity="0.9"/>
-      <path d="M50 8 Q60 -2 70 8" fill="none" stroke="#b8860b" stroke-width="3" stroke-linecap="round"/>
-      <rect x="28" y="50" width="64" height="10" rx="5" fill="#1a1a1a" opacity="0.8"/>
-      <circle cx="42" cy="55" r="5" fill="#bf360c" stroke="${accent}" stroke-width="1.5" filter="url(#glow)"/>
-      <circle cx="78" cy="55" r="5" fill="#bf360c" stroke="${accent}" stroke-width="1.5" filter="url(#glow)"/>
-      <path d="M22 55 L18 65 Q20 70 25 68" fill="${color}" stroke="#d4af37" stroke-width="1"/>
-      <path d="M98 55 L102 65 Q100 70 95 68" fill="${color}" stroke="#d4af37" stroke-width="1"/>
+      <circle cx="60" cy="60" r="42" fill="url(#helm-grad-tiberius)" stroke="#d4af37" stroke-width="2.5"/>
+      <path d="M40 75 L40 55 L80 55 L80 75 Z" fill="#ffd700" opacity="0.6"/>
+      <path d="M35 55 L60 38 L85 55 Z" fill="#ffd700" stroke="#b8860b" stroke-width="1"/>
+      <line x1="50" y1="55" x2="50" y2="75" stroke="#1a1a1a" stroke-width="2"/>
+      <line x1="60" y1="55" x2="60" y2="75" stroke="#1a1a1a" stroke-width="2"/>
+      <line x1="70" y1="55" x2="70" y2="75" stroke="#1a1a1a" stroke-width="2"/>
     </svg>`,
-    'helmet-thraex': `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    'emperor-claudius': `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <linearGradient id="helm-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <linearGradient id="helm-grad-claudius" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" style="stop-color:${accent};stop-opacity:1" />
           <stop offset="100%" style="stop-color:${color};stop-opacity:1" />
         </linearGradient>
-        <filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <filter id="glow-claudius"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
       </defs>
-      <path d="M25 55 Q25 18 60 12 Q95 18 95 55 Q95 88 60 98 Q25 88 25 55Z" fill="url(#helm-grad)" stroke="#d4af37" stroke-width="2.5"/>
-      <path d="M40 12 Q50 -5 60 5 Q70 -5 80 12" fill="#d4af37" stroke="#b8860b" stroke-width="1.5"/>
-      <path d="M60 5 L58 -5 L62 -5 Z" fill="#d4af37"/>
-      <path d="M30 50 L90 50 L88 62 L32 62Z" fill="#1a1a1a" opacity="0.85"/>
-      <circle cx="44" cy="56" r="4.5" fill="${accent}" filter="url(#glow)"/>
-      <circle cx="76" cy="56" r="4.5" fill="${accent}" filter="url(#glow)"/>
-      <path d="M42 76 L60 82 L78 76" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="60" cy="60" r="42" fill="url(#helm-grad-claudius)" stroke="#d4af37" stroke-width="2.5"/>
+      <path d="M35 70 Q50 65 60 70 Q70 65 85 70 L85 45 Q70 40 60 45 Q50 40 35 45 Z" fill="#f5f2eb" stroke="#d4af37" stroke-width="1.5"/>
+      <line x1="40" y1="52" x2="55" y2="52" stroke="#8b795e" stroke-width="1.5"/>
+      <line x1="40" y1="60" x2="55" y2="60" stroke="#8b795e" stroke-width="1.5"/>
+      <line x1="65" y1="52" x2="80" y2="52" stroke="#8b795e" stroke-width="1.5"/>
+      <line x1="65" y1="60" x2="80" y2="60" stroke="#8b795e" stroke-width="1.5"/>
     </svg>`,
-    'helmet-dimachaerus': `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    'emperor-trajan': `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <linearGradient id="helm-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <linearGradient id="helm-grad-trajan" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" style="stop-color:${accent};stop-opacity:1" />
           <stop offset="100%" style="stop-color:${color};stop-opacity:1" />
         </linearGradient>
-        <filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <filter id="glow-trajan"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
       </defs>
-      <ellipse cx="60" cy="52" rx="38" ry="42" fill="url(#helm-grad)" stroke="#d4af37" stroke-width="2.5"/>
-      <path d="M22 55 L15 70" stroke="#d4af37" stroke-width="3" stroke-linecap="round"/>
-      <path d="M98 55 L105 70" stroke="#d4af37" stroke-width="3" stroke-linecap="round"/>
-      <path d="M10 72 L15 65 L20 75Z" fill="#d4af37"/>
-      <path d="M100 75 L105 65 L110 72Z" fill="#d4af37"/>
-      <rect x="28" y="50" width="64" height="9" rx="4" fill="#1a1a1a" opacity="0.85"/>
-      <circle cx="44" cy="54" r="4" fill="${accent}" filter="url(#glow)"/>
-      <circle cx="76" cy="54" r="4" fill="${accent}" filter="url(#glow)"/>
-      <path d="M40 74 Q60 80 80 74" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+      <circle cx="60" cy="60" r="42" fill="url(#helm-grad-trajan)" stroke="#d4af37" stroke-width="2.5"/>
+      <path d="M60 35 L50 50 L35 45 L40 60 L52 65 L60 85 L68 65 L80 60 L85 45 L70 50 Z" fill="#ffd700" stroke="#b8860b" stroke-width="1" filter="url(#glow-trajan)"/>
+      <circle cx="60" cy="40" r="3" fill="#1a1a1a"/>
     </svg>`,
-    'helmet-hoplomachus': `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    'emperor-hadrian': `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <linearGradient id="helm-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <linearGradient id="helm-grad-hadrian" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" style="stop-color:${accent};stop-opacity:1" />
           <stop offset="100%" style="stop-color:${color};stop-opacity:1" />
         </linearGradient>
-        <filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <filter id="glow-hadrian"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
       </defs>
-      <path d="M22 58 Q22 15 60 10 Q98 15 98 58 Q98 92 60 100 Q22 92 22 58Z" fill="url(#helm-grad)" stroke="#d4af37" stroke-width="2.5"/>
-      <path d="M45 10 Q52 -8 60 5 Q68 -8 75 10" fill="none" stroke="#d4af37" stroke-width="2.5" stroke-linecap="round"/>
-      <circle cx="60" cy="-2" r="4" fill="#d4af37"/>
-      <path d="M28 52 Q60 46 92 52 L90 64 Q60 58 30 64Z" fill="#1a1a1a" opacity="0.8"/>
-      <circle cx="44" cy="56" r="5" fill="#004d40" stroke="${accent}" stroke-width="1.5" filter="url(#glow)"/>
-      <circle cx="76" cy="56" r="5" fill="#004d40" stroke="${accent}" stroke-width="1.5" filter="url(#glow)"/>
-      <path d="M44 78 Q60 86 76 78" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="60" cy="60" r="42" fill="url(#helm-grad-hadrian)" stroke="#d4af37" stroke-width="2.5"/>
+      <path d="M35 72 C35 45 85 45 85 72 Z" fill="#ffd700" opacity="0.7"/>
+      <circle cx="60" cy="52" r="5" fill="#1a1a1a" filter="url(#glow-hadrian)"/>
+      <rect x="30" y="72" width="60" height="6" fill="#d4af37"/>
     </svg>`,
-    'helmet-eques': `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    'emperor-marcus': `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <linearGradient id="helm-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <linearGradient id="helm-grad-marcus" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" style="stop-color:${accent};stop-opacity:1" />
           <stop offset="100%" style="stop-color:${color};stop-opacity:1" />
         </linearGradient>
-        <filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <filter id="glow-marcus"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
       </defs>
-      <ellipse cx="60" cy="52" rx="40" ry="43" fill="url(#helm-grad)" stroke="#d4af37" stroke-width="2.5"/>
-      <path d="M30 20 Q35 5 45 12" fill="none" stroke="#d4af37" stroke-width="2.5" stroke-linecap="round"/>
-      <path d="M90 20 Q85 5 75 12" fill="none" stroke="#d4af37" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="60" cy="60" r="42" fill="url(#helm-grad-marcus)" stroke="#d4af37" stroke-width="2.5"/>
+      <circle cx="60" cy="60" r="28" fill="none" stroke="#ffd700" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.6"/>
+      <text x="60" y="42" font-size="12" fill="#ffd700" text-anchor="middle" filter="url(#glow-marcus)">★</text>
+      <text x="40" y="55" font-size="12" fill="#ffd700" text-anchor="middle" filter="url(#glow-marcus)">★</text>
+      <text x="80" y="55" font-size="12" fill="#ffd700" text-anchor="middle" filter="url(#glow-marcus)">★</text>
+      <text x="50" y="75" font-size="12" fill="#ffd700" text-anchor="middle" filter="url(#glow-marcus)">★</text>
+      <text x="70" y="75" font-size="12" fill="#ffd700" text-anchor="middle" filter="url(#glow-marcus)">★</text>
+    </svg>`,
+    'emperor-commodus': `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="helm-grad-commodus" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:${accent};stop-opacity:1" />
+          <stop offset="100%" style="stop-color:${color};stop-opacity:1" />
+        </linearGradient>
+        <filter id="glow-commodus"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+      <ellipse cx="60" cy="52" rx="38" ry="42" fill="url(#helm-grad-commodus)" stroke="#d4af37" stroke-width="2.5"/>
       <path d="M30 48 Q60 42 90 48 L88 60 Q60 54 32 60Z" fill="#1a1a1a" opacity="0.8"/>
-      <circle cx="44" cy="53" r="4.5" fill="${accent}" filter="url(#glow)"/>
-      <circle cx="76" cy="53" r="4.5" fill="${accent}" filter="url(#glow)"/>
       <path d="M44 76 Q60 82 76 76" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round"/>
-      <path d="M20 58 L16 72 Q18 76 22 74" fill="${color}" stroke="#d4af37" stroke-width="1"/>
-      <path d="M100 58 L104 72 Q102 76 98 74" fill="${color}" stroke="#d4af37" stroke-width="1"/>
+      <path d="M22 50 C10 30 15 80 60 92 C105 80 110 30 98 50" fill="none" stroke="#ffd700" stroke-width="2" stroke-dasharray="2 4"/>
+    </svg>`,
+    'emperor-constantine': `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="helm-grad-constantine" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:${accent};stop-opacity:1" />
+          <stop offset="100%" style="stop-color:${color};stop-opacity:1" />
+        </linearGradient>
+        <filter id="glow-constantine"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+      <path d="M22 58 Q22 15 60 10 Q98 15 98 58 Q98 92 60 100 Q22 92 22 58Z" fill="url(#helm-grad-constantine)" stroke="#d4af37" stroke-width="2.5"/>
+      <path d="M60 12 L60 85" stroke="#d4af37" stroke-width="3" filter="url(#glow-constantine)"/>
+      <path d="M45 28 L75 28" stroke="#d4af37" stroke-width="3" filter="url(#glow-constantine)"/>
+      <text x="60" y="24" font-size="12" fill="#ffd700" text-anchor="middle" font-weight="bold" filter="url(#glow-constantine)">XP</text>
     </svg>`
   };
   
-  return svgTemplates[enemyType.icon] || svgTemplates['helmet-provocator'];
+  return svgTemplates[enemyType.icon] || svgTemplates['emperor-augustus'];
 }
 
 /**
@@ -552,12 +593,13 @@ function loadNextWord() {
 
   // Pull next word from queue
   activeWord = wordQueue[wordIndex];
+  window.activeWord = activeWord;
   wordIndex++;
 
   // Update progress display
   const levelDisplay = document.getElementById('level-display');
   if (levelDisplay) {
-    levelDisplay.textContent = `${answeredWords} / ${totalWords}`;
+    levelDisplay.textContent = `Level ${getCurrentLevel()} (${answeredWords} / ${totalWords})`;
   }
 
   // Bind to #latin-word (and mask if Caecus active)
@@ -643,11 +685,20 @@ function handleCorrectAnswer() {
 
     RomanArenaAudio.playCheer();
 
+    // Trigger non-blocking victory banner
+    showVictoryBanner(currentEnemyType.name);
+
+    // Track defeated emperor
+    if (!defeatedEmperors.includes(currentEnemyType.name)) {
+      defeatedEmperors.push(currentEnemyType.name);
+      updateTrophyUI();
+    }
+
     // Spawn a new random enemy with unique visuals
     const newEnemy = getRandomEnemyType();
     renderEnemy(newEnemy);
 
-    showFeedback("🏆 Nemico sconfitto! Sotto con il prossimo!");
+    showFeedback("🏆 Cesare sconfitto! Sotto con il prossimo!");
   } else {
     showFeedback("⚔️ Colpo a segno!");
   }
@@ -693,10 +744,11 @@ function handleIncorrectAnswer(isTimeout = false) {
       }
     }
 
+    const solHtml = activeWord ? `<br><span class="correct-solution">La soluzione era: <strong>${activeWord.italian}</strong></span>` : '';
     if (isTimeout) {
-      showFeedback(`⏱️ Tempo scaduto! Subisci ${damage} danni!`);
+      showFeedback(`⏱️ Tempo scaduto! ${solHtml}<br>Subisci ${damage} danni!`);
     } else {
-      showFeedback(`❌ Risposta errata! Subisci ${damage} danni!`);
+      showFeedback(`❌ Risposta errata! ${solHtml}<br>Subisci ${damage} danni!`);
     }
 
     if (playerHP <= 0) {
@@ -832,6 +884,8 @@ function startGame() {
   enemyHP = 100;
   activeWord = null;
   answeredWords = 0;
+  defeatedEmperors = [];
+  updateTrophyUI();
 
   // Shuffle all words
   wordQueue = getShuffledWords();
@@ -889,6 +943,8 @@ function restartGame() {
   enemyHP = 100;
   activeWord = null;
   answeredWords = 0;
+  defeatedEmperors = [];
+  updateTrophyUI();
 
   // Shuffle all words
   wordQueue = getShuffledWords();
