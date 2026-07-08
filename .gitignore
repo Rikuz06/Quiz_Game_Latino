@@ -2,6 +2,12 @@
 node_modules/
 .agents/
 tests/
+PROJECT.md
+TEST_INFRA.md
+TEST_READY.md
+ORIGINAL_REQUEST.md
+
+
 
 
 # File di configurazione e log
