@@ -2,10 +2,7 @@
 node_modules/
 .agents/
 tests/
-PROJECT.md
-TEST_INFRA.md
-TEST_READY.md
-ORIGINAL_REQUEST.md
+
 
 
 
@@ -15,6 +12,8 @@ jest.config.js
 package-lock.json
 package.json
 *.log
+*.md
+
 
 # File di sistema macOS/Windows
 <<<<<<< HEAD
