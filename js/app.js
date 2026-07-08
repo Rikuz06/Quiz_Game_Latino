@@ -102,7 +102,7 @@ function showVictoryBanner(emperorName) {
   const bannerTitle = document.getElementById('victory-banner-title');
   const bannerMsg = document.getElementById('victory-banner-message');
   if (banner) {
-    if (bannerTitle) bannerTitle.textContent = "CESARE SCONFITTO!";
+    if (bannerTitle) bannerTitle.textContent = `${emperorName} SCONFITTO!`;
     if (bannerMsg) bannerMsg.textContent = `${emperorName} ha ceduto al tuo valore nell'arena!`;
     banner.classList.remove('hidden');
     banner.classList.add('active');
@@ -674,6 +674,7 @@ function useGladius() {
   favor -= 60;
   score += 2;
   wordsDefeated += 1;
+  answeredWords += 1; // Sync progress tracker
   streak += 1;
   maxStreak = Math.max(maxStreak, streak);
 
@@ -702,8 +703,6 @@ function useGladius() {
   enemyHP = 0;
   updateEnemyHPUI();
 
-  RomanArenaAudio.playCheer();
-
   // Trigger non-blocking victory banner
   showVictoryBanner(currentEnemyType.name);
 
@@ -716,6 +715,10 @@ function useGladius() {
   // Spawn a new random emperor
   const newEnemy = getRandomEnemyType();
   renderEnemy(newEnemy);
+
+  // Reset enemy HP to 100 for the newly spawned enemy
+  enemyHP = 100;
+  updateEnemyHPUI();
 
   showFeedback("⚔️ Gladius! Cesare sconfitto istantaneamente!");
 
